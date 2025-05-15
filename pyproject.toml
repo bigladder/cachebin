@@ -1,0 +1,46 @@
+[project]
+name = "cachebin"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = "~=3.10"
+readme = "README.md"
+dependencies = ["requests", "py7zr"]
+
+[dependency-groups]
+dev = ["ruff", "pytest", "doit", "pre-commit", "mypy"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors (see https://docs.astral.sh/ruff/rules/#pycodestyle-e-w)
+    "F",    # pyflakes (see https://docs.astral.sh/ruff/rules/#pyflakes-f)
+    "PL",   # Pylint (see https://docs.astral.sh/ruff/rules/#pylint-pl)
+    "I001", # isort unsorted-imports (see https://docs.astral.sh/ruff/rules/#isort-i)
+]
+ignore = [
+    "F405", # undefined-local-with-import-star-usage
+]
+
+[tool.ruff.lint.pylint]
+max-args = 6
+
+[tool.mypy]
+disallow_incomplete_defs = true
+no_implicit_optional = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "cachebin.*"
+disable_error_code = ["annotation-unchecked", "import"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["cachebin"]
+
+[tool.uv]
+[tool.uv.sources]
