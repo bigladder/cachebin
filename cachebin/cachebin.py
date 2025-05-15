@@ -135,6 +135,13 @@ class BinaryVersion:
         Returns:
             str: The output of the command.
         """
+        if self.parent._system == "windows":
+            binary_path_exe = self.binary_directory_path / "{command}.exe"
+            binary_path_bat = self.binary_directory_path / "{command}.bat"
+            if binary_path_exe.exists():
+                command = f"{command}.exe"
+            elif binary_path_bat.exists():
+                command = f"{command}.bat"
         binary_path = self.binary_directory_path / command
         if not binary_path.exists():
             raise FileNotFoundError(f"Binary {binary_path} does not exist.")
