@@ -136,8 +136,8 @@ class BinaryVersion:
             str: The output of the command.
         """
         if self.parent._system == "windows":
-            binary_path_exe = self.binary_directory_path / "{command}.exe"
-            binary_path_bat = self.binary_directory_path / "{command}.bat"
+            binary_path_exe = self.binary_directory_path / f"{command}.exe"
+            binary_path_bat = self.binary_directory_path / f"{command}.bat"
             if binary_path_exe.exists():
                 command = f"{command}.exe"
             elif binary_path_bat.exists():
