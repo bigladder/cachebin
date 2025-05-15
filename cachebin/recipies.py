@@ -14,10 +14,10 @@ pandoc_manager = BinaryManager(
     get_platform_string=lambda system, architecture: process_map(
         {
             "darwin-x86_64": "x86_64-macOS",
-            "darwin-aarch64": "arm64-macOS",
+            "darwin-arm64": "arm64-macOS",
             "linux-x86_64": "linux-amd64",
             "linux-aarch64": "linux-arm64",
-            "windows-x86_64": "windows-x86_64",
+            "windows-amd64": "windows-x86_64",
         },
         "platform",
         f"{system}-{architecture}",
@@ -40,9 +40,9 @@ pandoc_crossref_manager = BinaryManager(
     get_platform_string=lambda system, architecture: process_map(
         {
             "darwin-x86_64": "macOS-X64",
-            "darwin-aarch64": "macOS-ARM64",
+            "darwin-arm64": "macOS-ARM64",
             "linux-x86_64": "Linux-X64",
-            "windows-x86_64": "Windows-X64",
+            "windows-amd64": "Windows-X64",
         },
         "platform",
         f"{system}-{architecture}",
