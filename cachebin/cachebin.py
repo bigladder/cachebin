@@ -94,7 +94,7 @@ def extract_archive(archive_path: Path | str, extract_path: Path | str) -> Path:
         if top_item.is_directory:
             extracted_parent_directory = extract_path / top_item.filename
 
-    if not extracted_parent_directory.exists():
+    if not extracted_parent_directory.exists() or not any(extracted_parent_directory.iterdir()):
         print(f"Extracting {archive_path} to {extract_path}...")
         archive.extractall(path=extract_path)
     return extracted_parent_directory
@@ -166,7 +166,8 @@ class BinaryManager:
         get_archive_extension: Callable[[str], str],  # returns archive extension based on system
         get_platform_string: Callable[[str, str], str] = lambda system,
         architecture: f"{system}-{architecture}",  # returns platform string used in url_pattern
-        get_extracted_bin_path: Callable[[str], str] = lambda _: "bin",  # returns extracted bin path based on system
+        get_extracted_bin_path: Callable[[str, str], str] = lambda system,
+        architecture: "bin",  # returns extracted bin path
         cache_directory: Path | str | None = None,
     ):
         self.package_name = package_name
@@ -175,7 +176,7 @@ class BinaryManager:
         self._architecture = machine().lower()
         self._platform_string = get_platform_string(self._system, self._architecture)
         self._extension = get_archive_extension(self._system)
-        self._extracted_bin_path = get_extracted_bin_path(self._system)
+        self._extracted_bin_path = get_extracted_bin_path(self._system, self._architecture)
 
         self._cache_directory: Path
         if cache_directory is None:

@@ -31,7 +31,11 @@ tinytex_manager = BinaryManager(
     get_archive_extension=lambda system: process_map(
         {"windows": "zip", "linux": "tar.gz", "darwin": "tgz"}, "system", system
     ),
-    get_extracted_bin_path=lambda system: f"bin/universal-{system}" if system == "darwin" else f"bin/{system}",
+    get_extracted_bin_path=lambda system, architecture: f"bin/universal-{system}"
+    if system == "darwin"
+    else f"bin/{system}"
+    if system == "windows"
+    else f"bin/{architecture}-{system}",
 )
 
 pandoc_crossref_manager = BinaryManager(
@@ -48,5 +52,5 @@ pandoc_crossref_manager = BinaryManager(
         f"{system}-{architecture}",
     ),
     get_archive_extension=lambda system: "7z" if system == "windows" else "tar.xz",
-    get_extracted_bin_path=lambda _: "",
+    get_extracted_bin_path=lambda system, architecture: "",
 )
