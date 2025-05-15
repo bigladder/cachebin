@@ -157,6 +157,8 @@ class BinaryVersion:
             raise RuntimeError(f"Command failed with error: {stderr.decode('utf-8')}")
         return stdout.decode("utf-8")
 
+    # TODO: def clear_cache(self) -> None:
+
 
 class BinaryManager:
     def __init__(
@@ -205,3 +207,5 @@ class BinaryManager:
         if version not in self._versions:
             self._versions[version] = BinaryVersion(version, self)
         return self._versions[version]
+
+    # TODO: def clear_cache(self) -> None:

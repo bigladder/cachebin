@@ -23,6 +23,7 @@ pandoc_manager = BinaryManager(
         f"{system}-{architecture}",
     ),
     get_archive_extension=lambda system: "tar.gz" if system == "linux" else "zip",
+    get_extracted_bin_path=lambda system, architecture: "" if system == "windows" else "bin",
 )
 
 tinytex_manager = BinaryManager(
