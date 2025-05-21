@@ -17,8 +17,9 @@ def test_tinytex():
     version = "v2025.05"
     tinytex = tinytex_manager.get_version(version)
     assert version in tinytex.call("tlmgr", ["--version"])
-    tlmgr_list = tinytex.call("tlmgr", ["info", "--only-installed"]).splitlines()
-    tlmgr_list = [line[2 : line.find(": ")] for line in tlmgr_list]
+    tinytex.call(
+        "tlmgr", ["info", "--only-installed"], output_file_path=tinytex.extraction_directory_path / "tlmgr_info.txt"
+    )
     tinytex.clear_cache()
 
 

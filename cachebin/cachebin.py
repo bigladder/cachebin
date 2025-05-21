@@ -5,7 +5,7 @@ from platform import machine, system
 from shutil import rmtree
 from stat import S_IXGRP, S_IXOTH, S_IXUSR
 from subprocess import PIPE, Popen
-from typing import Callable
+from typing import Callable, overload
 
 import py7zr
 import requests
@@ -162,9 +162,31 @@ class BinaryVersion:
             raise FileNotFoundError(f"Binary '{binary_path}' does not exist.")
         return binary_path
 
+    @overload
     def call(
-        self, command: str | None = None, arguments: list[str] | None = None, working_directory: Path | str = Path(".")
-    ) -> str:
+        self,
+        command: str | None = ...,
+        arguments: list[str] | None = ...,
+        working_directory: Path | str = ...,
+        output_file_path: None = ...,
+    ) -> str: ...
+
+    @overload
+    def call(
+        self,
+        command: str | None = ...,
+        arguments: list[str] | None = ...,
+        working_directory: Path | str = ...,
+        output_file_path: str | Path = ...,
+    ) -> None: ...
+
+    def call(
+        self,
+        command: str | None = None,
+        arguments: list[str] | None = None,
+        working_directory: Path | str = Path.cwd(),
+        output_file_path: str | Path | None = None,
+    ) -> str | None:
         """
         Calls the binary with the specified command and arguments.
 
@@ -188,8 +210,18 @@ class BinaryVersion:
 
         if arguments is None:
             arguments = []
+
+        if output_file_path is not None:
+            output_file_path = Path(output_file_path)
+            if not output_file_path.is_absolute():
+                output_file_path = working_directory / output_file_path
+            output_stream = open(output_file_path, "w")
         process = Popen(
-            [str(binary_path)] + arguments, stdout=PIPE, stderr=PIPE, creationflags=creation_flag, cwd=working_directory
+            [str(binary_path)] + arguments,
+            stdout=PIPE if output_file_path is None else output_stream,
+            stderr=PIPE,
+            creationflags=creation_flag,
+            cwd=working_directory,
         )
         stdout, stderr = process.communicate()
         if process.returncode != 0:
@@ -197,7 +229,10 @@ class BinaryVersion:
                 f"Command '{binary_path} {' '.join(arguments)}' failed with error:\n"
                 f"{stderr.decode('utf-8')}\n{stdout.decode('utf-8')}"
             )
-        return stdout.decode("utf-8")
+        if output_file_path is None:
+            return stdout.decode("utf-8")
+        output_stream.close()
+        return None
 
     def clear_cache(self) -> None:
         """
