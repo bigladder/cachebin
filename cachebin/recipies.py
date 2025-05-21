@@ -37,6 +37,7 @@ tinytex_manager = BinaryManager(
     else f"bin/{system}"
     if system == "windows"
     else f"bin/{architecture}-{system}",
+    post_extraction_calls=[("tlmgr", ["update", "--self"])],
 )
 
 pandoc_crossref_manager = BinaryManager(
